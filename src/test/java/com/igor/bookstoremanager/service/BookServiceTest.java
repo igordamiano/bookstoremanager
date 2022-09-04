@@ -37,6 +37,16 @@ public class BookServiceTest {
         Assertions.assertEquals(book.getIsbn(), bookDto.getIsbn());
         Assertions.assertEquals(book.getPublisherName(), bookDto.getPublisherName());
 
-
     }
+
+    @Test
+    void whenGivenUnexistingIdThenNotFindThrowAnException() {
+        var invalidId = 10L;
+
+        Mockito.when(bookRepository.findById(invalidId))
+                .thenReturn(Optional.ofNullable(Mockito.any(Book.class)));
+
+        Assertions.assertThrows(BookNotFoundException.class, () -> bookService.findById(invalidId));
+    }
+
 }
