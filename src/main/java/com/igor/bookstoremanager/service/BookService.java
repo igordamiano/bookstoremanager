@@ -3,6 +3,7 @@ package com.igor.bookstoremanager.service;
 import com.igor.bookstoremanager.dto.BookDTO;
 import com.igor.bookstoremanager.dto.MessageResponseDTO;
 import com.igor.bookstoremanager.entity.Book;
+import com.igor.bookstoremanager.exception.BookNotFoundException;
 import com.igor.bookstoremanager.mapper.BookMapper;
 import com.igor.bookstoremanager.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,11 @@ public class BookService {
                 .build();
     }
 
-    public BookDTO findById(Long id) {
+    public BookDTO findById(Long id) throws BookNotFoundException {
 
-        Optional<Book> optionalBook = bookRepository.findById(id);
-        return bookMapper.toDTO(optionalBook.get());
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
+
+        return bookMapper.toDTO(book);
 
     }
 }
